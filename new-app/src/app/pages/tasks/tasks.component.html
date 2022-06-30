@@ -1,0 +1,87 @@
+<h2 class="content-block">Tasks</h2>
+<dx-data-grid class="dx-card wide-card" [dataSource]="pokemon" [showBorders]="false" [columnAutoWidth]="true"
+  [columnHidingEnabled]="true" [showBorders]="true" (onSelectionChanged)="selectionChanged($event)">
+
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-header-filter [visible]="true" alignment="left"></dxo-header-filter>
+
+
+  <dxo-paging [pageSize]="10"></dxo-paging>
+  <dxo-pager [showPageSizeSelector]="true" [showInfo]="true"></dxo-pager>
+
+  <dxo-selection mode="single"></dxo-selection>
+  <dxi-column 
+  dataField="sprite" 
+  cellTemplate="cellTemplate" 
+  [allowFiltering]="false" 
+  [width]="120"
+  [hidingPriority]="2">
+  </dxi-column>
+
+  <dxi-column 
+  dataField="id" 
+  [width]="120" 
+  [hidingPriority]="2">
+  </dxi-column>
+
+  <dxi-column 
+  alignment="right" 
+  dataField="name" 
+  [width]="120" 
+  [hidingPriority]="2">
+  </dxi-column>
+
+  <dxi-column 
+  dataField="height" 
+  [width]="120" 
+  [hidingPriority]="2">
+  </dxi-column>
+
+  <dxi-column 
+  dataField="type" 
+  [width]="120" 
+  [hidingPriority]="2">
+  </dxi-column>
+
+  
+
+  <div *dxTemplate="let data of 'cellTemplate'">
+    <img [src]="data.value" />
+  </div>
+
+</dx-data-grid>
+<dx-button
+stylingMode="contained"
+text="Show"
+type="default"
+[width]="120"
+(onClick)="click($event)"
+>
+</dx-button>
+
+<dx-popup
+[width]="300"
+[height]="280"
+[showTitle]="true"
+title="Information"
+[dragEnabled]="false"
+[hideOnOutsideClick]="true"
+[showCloseButton]="true"
+container=".dx-viewport"
+[(visible)]="popupVisible"
+>
+<div class="box" *dxTemplate="let data of 'content'">
+  <img [src]="pokemon[selectedItemKeys[0].id - 1].sprite" [width]="200" style="display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 75%;">
+</div>
+<dx-button
+stylingMode="contained"
+text="next"
+type="default"
+[width]="120"
+(onClick)="nextPokemon($event)" >
+
+</dx-button>
+</dx-popup>
