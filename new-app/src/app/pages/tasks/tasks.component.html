@@ -1,11 +1,9 @@
-<h2 class="content-block">Tasks</h2>
+<h2 class="content-block">Pokemon</h2>
 <dx-data-grid class="dx-card wide-card" [dataSource]="pokemon" [showBorders]="false" [columnAutoWidth]="true"
   [columnHidingEnabled]="true" [showBorders]="true" (onSelectionChanged)="selectionChanged($event)">
 
   <dxo-filter-row [visible]="true"></dxo-filter-row>
   <dxo-header-filter [visible]="true" alignment="left"></dxo-header-filter>
-
-  <dxo-scrolling mode="virtual"></dxo-scrolling>
 
 
   <dxo-paging [pageSize]="10"></dxo-paging>
@@ -77,14 +75,17 @@ container=".dx-viewport"
 (onShown)="popup_shown($event)"
 >
 <div class="box" *dxTemplate="let data of 'content'">
-  <img [src]="pokeSprite" [width]="200" style="display: block;
+  <img [src]="pokeSprite" style="display: block;
   margin-left: auto;
   margin-right: auto;
-  width: 75%;">
+  width: 80%;">
 </div>
 </dx-popup>
 
-
+<br>
+<br>
+<br>
+<br>
 
 <dx-chart id="chart" [dataSource]="typeList" palette="soft" >
   <dxo-title

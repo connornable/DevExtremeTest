@@ -75,9 +75,7 @@ this.init();
    }
 
   async init() {
-  console.log("waiting")
   await this.initPokemon();
-  console.log("wauted");
 
 }
 
@@ -102,7 +100,6 @@ async initPokemon() {
        pokemon.name = data.name;
        pokemon.height = data.height;
        pokemon.type = data.types[0].type.name;
-       console.log(pokemon.type);
        this.calculateTypeCount(pokemon.type);
        
     })

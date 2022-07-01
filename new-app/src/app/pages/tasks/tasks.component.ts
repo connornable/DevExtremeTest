@@ -29,6 +29,7 @@ export class TasksComponent {
     this.pokemon = this.PokemonService.getPokemon();
     this.typeList = this.PokemonService.getTypeCount();
     console.log(this.typeList[0].value);
+    console.log(this.pokemon);
    
    
   }
@@ -57,7 +58,6 @@ export class TasksComponent {
    let i = 0;
    while (this.canAnimate) {
     this.pokeSprite = this.pokemon[this.selectedItemKeys[0].id - 1].sprite[i];
-    console.log("hello");
     i++;
     await new Promise(f => setTimeout(f, 1000));
     if (i === this.pokemon[this.selectedItemKeys[0].id - 1].sprite.length) {
