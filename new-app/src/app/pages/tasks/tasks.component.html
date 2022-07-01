@@ -5,13 +5,17 @@
   <dxo-filter-row [visible]="true"></dxo-filter-row>
   <dxo-header-filter [visible]="true" alignment="left"></dxo-header-filter>
 
+  <dxo-scrolling mode="virtual"></dxo-scrolling>
+
 
   <dxo-paging [pageSize]="10"></dxo-paging>
   <dxo-pager [showPageSizeSelector]="true" [showInfo]="true"></dxo-pager>
 
   <dxo-selection mode="single"></dxo-selection>
   <dxi-column 
-  dataField="sprite" 
+  dataField="sprite[0]" 
+  caption="Sprite"
+  [allowSorting]="false"
   cellTemplate="cellTemplate" 
   [allowFiltering]="false" 
   [width]="120"
@@ -63,25 +67,36 @@ type="default"
 [width]="300"
 [height]="280"
 [showTitle]="true"
-title="Information"
+title="Slide Show"
 [dragEnabled]="false"
 [hideOnOutsideClick]="true"
 [showCloseButton]="true"
 container=".dx-viewport"
 [(visible)]="popupVisible"
+(onHiding)="popup_hiding($event)"
+(onShown)="popup_shown($event)"
 >
 <div class="box" *dxTemplate="let data of 'content'">
-  <img [src]="pokemon[selectedItemKeys[0].id - 1].sprite" [width]="200" style="display: block;
+  <img [src]="pokeSprite" [width]="200" style="display: block;
   margin-left: auto;
   margin-right: auto;
   width: 75%;">
 </div>
-<dx-button
-stylingMode="contained"
-text="next"
-type="default"
-[width]="120"
-(onClick)="nextPokemon($event)" >
-
-</dx-button>
 </dx-popup>
+
+
+
+<dx-chart id="chart" [dataSource]="typeList" palette="soft" >
+  <dxo-title
+    text="Breakdown of Pokemon by Type"
+  >
+  </dxo-title>
+  <dxo-common-series-settings
+    argumentField="type"
+    type="bar"
+    valueField="value"
+    [ignoreEmptyPoints]="true"
+  >
+  </dxo-common-series-settings>
+  <dxo-series-template nameField="type"></dxo-series-template>
+</dx-chart>

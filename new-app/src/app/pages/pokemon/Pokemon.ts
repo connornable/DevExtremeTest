@@ -1,5 +1,5 @@
 export interface IPokemon {
-    sprite: string;
+    sprite: string[];
     id: any;
     name: string;
     height: number
