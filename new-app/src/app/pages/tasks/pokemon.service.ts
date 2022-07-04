@@ -71,15 +71,11 @@ export class PokemonService {
   },];
 
   constructor(private httpClient: HttpClient) {
-this.init();
+this.initPokemon();
    }
 
-  async init() {
-  await this.initPokemon();
 
-}
-
-async initPokemon() {
+ initPokemon() {
   for (let i = 1; i < 152; i++) {
     
     let pokemon: IPokemon = {

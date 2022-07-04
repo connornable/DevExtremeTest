@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import 'devextreme/data/odata/store';
 import { HttpClient } from '@angular/common/http';
 import { PokemonService } from './pokemon.service';
 import { IPokemon } from '../pokemon/Pokemon';
 import { DxButtonModule } from 'devextreme-angular/ui/button';
+import { DxDataGridComponent, DxDataGridModule } from 'devextreme-angular';
 import { delay } from 'rxjs';
+
 
 @Component({
   templateUrl: 'tasks.component.html',
@@ -18,6 +20,10 @@ export class TasksComponent {
   cahngeSelectionOptions: any;
   canAnimate: boolean = false;
   typeList: any[] = [];
+  @ViewChild(DxDataGridComponent, { static: false }) dataGrid: DxDataGridComponent | undefined;
+  
+
+  
 
   constructor(
     private httpClient: HttpClient,
@@ -30,6 +36,8 @@ export class TasksComponent {
     this.typeList = this.PokemonService.getTypeCount();
     console.log(this.typeList[0].value);
     console.log(this.pokemon);
+ 
+    
    
    
   }
@@ -51,10 +59,22 @@ export class TasksComponent {
 
   popup_shown(e: any) {
     this.canAnimate = true;
+    let filter = this.dataGrid?.instance.getCombinedFilter();
+    if (filter) {
+    filter.forEach((element: { filterValue: any; }) => {
+      console.log(element.filterValue);
+    });
+  }
+    
     this.animate();
   }
 
+  contentReady(e: any) {
+    console.log("content updataed" + e.content);
+  }
+
   async animate() {
+    if(this.pokeSprite) {
    let i = 0;
    while (this.canAnimate) {
     this.pokeSprite = this.pokemon[this.selectedItemKeys[0].id - 1].sprite[i];
@@ -64,6 +84,7 @@ export class TasksComponent {
       i = 0;
     }
    }
+  }
   
 }
 

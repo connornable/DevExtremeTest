@@ -1,6 +1,6 @@
 <h2 class="content-block">Pokemon</h2>
 <dx-data-grid class="dx-card wide-card" [dataSource]="pokemon" [showBorders]="false" [columnAutoWidth]="true"
-  [columnHidingEnabled]="true" [showBorders]="true" (onSelectionChanged)="selectionChanged($event)">
+  [columnHidingEnabled]="true" [showBorders]="true" (onSelectionChanged)="selectionChanged($event)" (onContentReady)="contentReady($event)">
 
   <dxo-filter-row [visible]="true"></dxo-filter-row>
   <dxo-header-filter [visible]="true" alignment="left"></dxo-header-filter>
