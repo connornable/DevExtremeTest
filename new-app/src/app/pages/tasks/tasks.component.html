@@ -1,6 +1,6 @@
 <h2 class="content-block">Pokemon</h2>
 <dx-data-grid class="dx-card wide-card" [dataSource]="pokemon" [showBorders]="false" [columnAutoWidth]="true"
-  [columnHidingEnabled]="true" [showBorders]="true" (onSelectionChanged)="selectionChanged($event)" (onContentReady)="contentReady($event)">
+  [columnHidingEnabled]="true" [showBorders]="true" (onSelectionChanged)="selectionChanged($event)" >
 
   <dxo-filter-row [visible]="true"></dxo-filter-row>
   <dxo-header-filter [visible]="true" alignment="left"></dxo-header-filter>
@@ -61,6 +61,24 @@ type="default"
 >
 </dx-button>
 
+<dx-button
+stylingMode="contained"
+text="Update Table"
+type="default"
+[width]="120"
+(onClick)="updateTable()"
+>
+</dx-button>
+
+<dx-button
+stylingMode="contained"
+text="Clear Filter"
+type="default"
+[width]="120"
+(onClick)="clearFilter()"
+>
+</dx-button>
+
 <dx-popup
 [width]="300"
 [height]="280"
@@ -87,17 +105,84 @@ container=".dx-viewport"
 <br>
 <br>
 
-<dx-chart id="chart" [dataSource]="typeList" palette="soft" >
+<dx-drop-down-box
+
+valueExpr="ID"
+displayExpr="name"
+placeholder="Select a pokemon..."
+[showClearButton]="true"
+[dataSource]="pokemon"
+
+>
+<div *dxTemplate="let data of 'content'">
+  <dx-tree-view
+    [dataSource]="pokemon"
+    dataStructure="plain"
+ 
+    selectionMode="multiple"
+    showCheckBoxesMode="normal"
+    [selectNodesRecursive]="false"
+    displayExpr="name"
+    [selectByClick]="true"
+    (onItemSelectionChanged)="treeView_itemSelectionChanged($event)"
+
+  
+  >
+  </dx-tree-view>
+</div>
+</dx-drop-down-box>
+
+
+<dx-chart
+  id="chart"
+  title="Pokemon Stat Comparison"
+  [dataSource]="statsComparison"
+
+>
+  <dxi-series valueField="firstSubject" name="{{firstSubject}}"></dxi-series>
+  <dxi-series valueField="secondSubject" name="{{secondSubject}}"></dxi-series>
+  <dxo-common-series-settings
+    argumentField="name"
+    type="bar"
+    hoverMode="allArgumentPoints"
+    selectionMode="allArgumentPoints"
+  >
+
+
+  </dxo-common-series-settings>
+  <dxo-legend verticalAlignment="bottom" horizontalAlignment="center">
+  </dxo-legend>
+  <dxo-export [enabled]="true"></dxo-export>
+</dx-chart>
+
+<br>
+<br>
+<br>
+<br>
+
+<dx-tabs
+#apiTabs
+[dataSource]="tabs"
+[selectedIndex]="0"
+(onItemClick)="selectTab($event)"
+></dx-tabs>
+
+<dx-chart id="chart" [dataSource]="chartSource" palette="soft" (onPointClick)="onPointClick($event)">
   <dxo-title
-    text="Breakdown of Pokemon by Type"
+    text="Breakdown of Pokemon by {{chartKey}}"
   >
   </dxo-title>
   <dxo-common-series-settings
-    argumentField="type"
+    argumentField= {{chartKey}}
     type="bar"
     valueField="value"
     [ignoreEmptyPoints]="true"
   >
   </dxo-common-series-settings>
-  <dxo-series-template nameField="type"></dxo-series-template>
+  <dxo-series-template nameField={{chartKey}}></dxo-series-template>
 </dx-chart>
+
+
+
+
+

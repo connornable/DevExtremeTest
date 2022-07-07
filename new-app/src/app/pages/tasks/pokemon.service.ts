@@ -70,6 +70,34 @@ export class PokemonService {
     value: 0,
   },];
 
+  heightList: any[] = [];
+  statsList: any[] = [{
+    name: "HP",
+    firstSubject: 0,
+    secondSubject: 0
+  }, {
+    name: "Attack",
+    firstSubject: 0,
+    secondSubject: 0
+  }, {
+    name: "Defense",
+    firstSubject: 0,
+    secondSubject: 0
+  }, {
+    name: "Special Attack",
+    firstSubject: 0,
+    secondSubject: 0
+  }, {
+    name: "Special Defense",
+    firstSubject: 0,
+    secondSubject: 0
+  }, {
+    name: "Speed",
+    firstSubject: 0,
+    secondSubject: 0
+  }
+];
+
   constructor(private httpClient: HttpClient) {
 this.initPokemon();
    }
@@ -83,11 +111,17 @@ this.initPokemon();
       id: undefined,
       name: "",
       height: 0,
-      type: ''
+      type: '',
+      hp: 0,
+      attack: 0,
+      defense: 0,
+      specialAttack: 0,
+      specialDefense: 0,
+      speed: 0 
     };
     
     this.httpClient.get(this.url + i).subscribe((data: any) => {
-     // console.log(data)
+      console.log(data);
        pokemon.sprite[0] = data.sprites.front_default;
        pokemon.sprite[1] = data.sprites.back_default;
        pokemon.sprite[2] = data.sprites.front_shiny;
@@ -96,7 +130,14 @@ this.initPokemon();
        pokemon.name = data.name;
        pokemon.height = data.height;
        pokemon.type = data.types[0].type.name;
+       pokemon.hp = data.stats[0].base_stat
+       pokemon.attack = data.stats[1].base_stat;
+       pokemon.defense = data.stats[2].base_stat;
+       pokemon.specialAttack = data.stats[3].base_stat;
+       pokemon.specialDefense = data.stats[4].base_stat;
+       pokemon.speed = data.stats[5].base_stat;
        this.calculateTypeCount(pokemon.type);
+       this.buildHeightMap(data.height);
        
     })
     this.pokemonList.push(pokemon);
@@ -104,8 +145,52 @@ this.initPokemon();
   }
 }
 
+
+
 public getPokemon(): IPokemon[] {
   return this.pokemonList;
+}
+
+initStatList(pokemon: IPokemon) {
+let statObject = {
+      pokemonName: "",
+      hp: 0,
+      attack: 0,
+      defense: 0,
+      specialAttack: 0,
+      specialDefense: 0,
+      speed: 0 
+}
+statObject.pokemonName = pokemon.name;
+statObject.hp = pokemon.hp;
+statObject.attack = pokemon.attack;
+statObject.defense = pokemon.defense;
+statObject.specialDefense = pokemon.specialDefense;
+statObject.specialAttack = pokemon.specialAttack;
+statObject.speed = pokemon.speed;
+}
+
+buildHeightMap(height: number) {
+  let heightObj = {
+    height: "",
+    value: 1
+  }
+  // if(this.heightList.has(height)) {
+  //   this.heightList.set(height, this.heightList.get(++height) );
+  // }
+  // else {
+  //   this.heightList.set(height, 1);
+  // }
+  if (this.heightList.some((e) => e.height === height.toString())) {
+    const index = this.heightList.findIndex(
+      (item) => item.height === height.toString()
+    );
+    ++this.heightList[index].value;
+  }
+  else {
+    heightObj.height = height.toString();
+    this.heightList.push(heightObj);
+  }
 }
 
 calculateTypeCount(type: string) {
@@ -174,9 +259,19 @@ calculateTypeCount(type: string) {
   }
 }
 
+getStatsList() {
+  return this.statsList;
+}
+
 getTypeCount() {
-  console.log(this.typeList);
+
 return this.typeList;
+}
+
+getHeightCount() {
+ this.heightList.sort((a, b) => (parseInt(a.height) < parseInt(b.height) ? -1 : 1));
+
+  return this.heightList;
 }
 
 }
