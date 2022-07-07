@@ -4,25 +4,23 @@ import { HttpClient } from '@angular/common/http';
 import { PokemonService } from './pokemon.service';
 import { IPokemon } from '../pokemon/Pokemon';
 import { DxButtonModule } from 'devextreme-angular/ui/button';
-import { DxChartComponent, DxDataGridComponent, DxDataGridModule } from 'devextreme-angular';
+import {
+  DxChartComponent,
+  DxDataGridComponent,
+  DxDataGridModule,
+} from 'devextreme-angular';
 import { delay } from 'rxjs';
-
-
-
-
 
 @Component({
   templateUrl: 'tasks.component.html',
 })
 export class TasksComponent {
-
   // @ViewChild(DxChartComponent)
   // chart!: DxChartComponent;
   // ds: any = {};
   // getDataSource() {
   //     this.ds = this.chart.instance.getDataSource();
   // }
-
 
   dataSource: any;
   pokemon: IPokemon[] = [];
@@ -36,12 +34,12 @@ export class TasksComponent {
   testList: any[] = [];
   typeSet = new Set<string>();
   filterList: string[] = [];
-  chartKey: string = "type";
+  chartKey: string = 'type';
   chartSource: any[] = [];
-  filters: any [] = [];
-  statsComparison: any [] = [];
-  firstSubject: string = "";
-  secondSubject: string = "";
+  filters: any[] = [];
+  statsComparison: any[] = [];
+  firstSubject: string = '';
+  secondSubject: string = '';
 
   tabs: any[] = [
     {
@@ -58,12 +56,9 @@ export class TasksComponent {
     | DxDataGridComponent
     | undefined;
 
-    @ViewChild(DxChartComponent, { static: false }) chart:
+  @ViewChild(DxChartComponent, { static: false }) chart:
     | DxDataGridComponent
     | undefined;
-
-  
-
 
   constructor(
     private httpClient: HttpClient,
@@ -77,14 +72,13 @@ export class TasksComponent {
     this.heightList = this.PokemonService.getHeightCount();
     this.statsComparison = this.PokemonService.getStatsList();
     console.log(this.heightList);
-    console.log(this.typeList)
+    console.log(this.typeList);
     this.chartSource = this.typeList;
     for (let val of this.typeList) {
       this.typeSet.add(val.type);
     }
 
-     console.log(this.chartKey);
-     
+    console.log(this.chartKey);
   }
 
   selectionChanged(data: any) {
@@ -114,21 +108,28 @@ export class TasksComponent {
   onPointClick(e: any) {
     console.log('bar clicked ' + e.target.originalArgument);
     this.filters.push(e.target.originalArgument);
-    console.log(this.filters)
-    this.dataGrid?.instance.columnOption(this.chartKey, 'filterValues', this.filters);
+    console.log(this.filters);
+    this.dataGrid?.instance.columnOption(
+      this.chartKey,
+      'filterValues',
+      this.filters
+    );
     this.dataGrid?.instance.refresh();
   }
 
   treeView_itemSelectionChanged(e: any) {
-console.log("fired");
-      if (e.component.getSelectedNodesKeys().length > 2) {  
-          e.component.unselectItem(e.itemData);  
-      }  
-      if (e.component.getSelectedNodes()[1] !== undefined) {
-        this.firstSubject = e.component.getSelectedNodes()[0].itemData.name;
-        this.secondSubject = e.component.getSelectedNodes()[1].itemData.name;
-      this.comparePokemon(e.component.getSelectedNodes()[0].itemData, e.component.getSelectedNodes()[1].itemData)
-      }
+    console.log('fired');
+    if (e.component.getSelectedNodesKeys().length > 2) {
+      e.component.unselectItem(e.itemData);
+    }
+    if (e.component.getSelectedNodes()[1] !== undefined) {
+      this.firstSubject = e.component.getSelectedNodes()[0].itemData.name;
+      this.secondSubject = e.component.getSelectedNodes()[1].itemData.name;
+      this.comparePokemon(
+        e.component.getSelectedNodes()[0].itemData,
+        e.component.getSelectedNodes()[1].itemData
+      );
+    }
   }
 
   async updateTable() {
@@ -181,13 +182,9 @@ console.log("fired");
     //   });
 
     // }
- 
-  //  console.log(this.statsComparison)
-  this.chart?.instance.refresh();
 
-    
-
-
+    //  console.log(this.statsComparison)
+    this.chart?.instance.refresh();
   }
 
   async animate() {
@@ -214,11 +211,10 @@ console.log("fired");
       case 1:
         this.chartKey = 'height';
         this.chartSource = this.heightList;
-   }
+    }
   }
 
   comparePokemon(pokemon1: any, pokemon2: any) {
-  
     this.statsComparison[0].firstSubject = pokemon1.hp;
     this.statsComparison[0].secondSubject = pokemon2.hp;
 
