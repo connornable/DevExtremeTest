@@ -75,33 +75,33 @@ export class PokemonService {
   statsList: any[] = [
     {
       name: 'HP',
-      firstSubject: 0,
-      secondSubject: 0,
+      firstPokemonComparisonSlot: 0,
+      secondPokemonComparisonSlot: 0,
     },
     {
       name: 'Attack',
-      firstSubject: 0,
-      secondSubject: 0,
+      firstPokemonComparisonSlot: 0,
+      secondPokemonComparisonSlot: 0,
     },
     {
       name: 'Defense',
-      firstSubject: 0,
-      secondSubject: 0,
+      firstPokemonComparisonSlot: 0,
+      secondPokemonComparisonSlot: 0,
     },
     {
       name: 'Special Attack',
-      firstSubject: 0,
-      secondSubject: 0,
+      firstPokemonComparisonSlot: 0,
+      secondPokemonComparisonSlot: 0,
     },
     {
       name: 'Special Defense',
-      firstSubject: 0,
-      secondSubject: 0,
+      firstPokemonComparisonSlot: 0,
+      secondPokemonComparisonSlot: 0,
     },
     {
       name: 'Speed',
-      firstSubject: 0,
-      secondSubject: 0,
+      firstPokemonComparisonSlot: 0,
+      secondPokemonComparisonSlot: 0,
     },
   ];
 

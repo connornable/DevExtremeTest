@@ -38,8 +38,8 @@ export class TasksComponent {
   chartSource: any[] = [];
   filters: any[] = [];
   statsComparison: any[] = [];
-  firstSubject: string = '';
-  secondSubject: string = '';
+  firstPokemonComparisonSlot: string = '';
+  secondPokemonComparisonSlot: string = '';
 
   tabs: any[] = [
     {
@@ -77,8 +77,10 @@ export class TasksComponent {
     for (let val of this.typeList) {
       this.typeSet.add(val.type);
     }
+  }
 
-    console.log(this.chartKey);
+  getRandomInt(max: number) {
+    return Math.floor(Math.random() * max);
   }
 
   selectionChanged(data: any) {
@@ -123,8 +125,10 @@ export class TasksComponent {
       e.component.unselectItem(e.itemData);
     }
     if (e.component.getSelectedNodes()[1] !== undefined) {
-      this.firstSubject = e.component.getSelectedNodes()[0].itemData.name;
-      this.secondSubject = e.component.getSelectedNodes()[1].itemData.name;
+      this.firstPokemonComparisonSlot =
+        e.component.getSelectedNodes()[0].itemData.name;
+      this.secondPokemonComparisonSlot =
+        e.component.getSelectedNodes()[1].itemData.name;
       this.comparePokemon(
         e.component.getSelectedNodes()[0].itemData,
         e.component.getSelectedNodes()[1].itemData
@@ -215,23 +219,26 @@ export class TasksComponent {
   }
 
   comparePokemon(pokemon1: any, pokemon2: any) {
-    this.statsComparison[0].firstSubject = pokemon1.hp;
-    this.statsComparison[0].secondSubject = pokemon2.hp;
+    this.statsComparison[0].firstPokemonComparisonSlot = pokemon1.hp;
+    this.statsComparison[0].secondPokemonComparisonSlot = pokemon2.hp;
 
-    this.statsComparison[1].firstSubject = pokemon1.attack;
-    this.statsComparison[1].secondSubject = pokemon2.attack;
+    this.statsComparison[1].firstPokemonComparisonSlot = pokemon1.attack;
+    this.statsComparison[1].secondPokemonComparisonSlot = pokemon2.attack;
 
-    this.statsComparison[2].firstSubject = pokemon1.defense;
-    this.statsComparison[2].secondSubject = pokemon2.defense;
+    this.statsComparison[2].firstPokemonComparisonSlot = pokemon1.defense;
+    this.statsComparison[2].secondPokemonComparisonSlot = pokemon2.defense;
 
-    this.statsComparison[3].firstSubject = pokemon1.specialAttack;
-    this.statsComparison[3].secondSubject = pokemon2.specialAttack;
+    this.statsComparison[3].firstPokemonComparisonSlot = pokemon1.specialAttack;
+    this.statsComparison[3].secondPokemonComparisonSlot =
+      pokemon2.specialAttack;
 
-    this.statsComparison[4].firstSubject = pokemon1.specialDefense;
-    this.statsComparison[4].secondSubject = pokemon2.specialDefense;
+    this.statsComparison[4].firstPokemonComparisonSlot =
+      pokemon1.specialDefense;
+    this.statsComparison[4].secondPokemonComparisonSlot =
+      pokemon2.specialDefense;
 
-    this.statsComparison[5].firstSubject = pokemon1.speed;
-    this.statsComparison[5].secondSubject = pokemon2.speed;
+    this.statsComparison[5].firstPokemonComparisonSlot = pokemon1.speed;
+    this.statsComparison[5].secondPokemonComparisonSlot = pokemon2.speed;
 
     this.chart?.instance.refresh();
 
