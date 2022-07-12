@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import 'devextreme/data/odata/store';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { PokemonService } from './pokemon.service';
 import { IPokemon } from '../pokemon/Pokemon';
 import { DxButtonModule } from 'devextreme-angular/ui/button';
@@ -40,6 +40,12 @@ export class TasksComponent {
   statsComparison: any[] = [];
   firstPokemonComparisonSlot: string = '';
   secondPokemonComparisonSlot: string = '';
+  stateConfig: string[] = [
+    'storage_slot_1',
+    'storage_slot_2',
+    'storage_slot_3',
+  ];
+  currentState: string = 'storage_slot_1';
 
   tabs: any[] = [
     {
@@ -79,14 +85,32 @@ export class TasksComponent {
     }
   }
 
+  saveState() {
+    const state = this.dataGrid?.instance.state();
+    localStorage.setItem(this.currentState, JSON.stringify(state));
+  }
+  loadState(stateToLoad: string) {
+    const state = JSON.parse(localStorage.getItem(stateToLoad) || '{}');
+    this.dataGrid?.instance.state(state);
+  }
+
   getRandomInt(max: number) {
     return Math.floor(Math.random() * max);
+  }
+
+  onStateButtonClicked(e: any) {
+    this.currentState = e.itemData;
+    this.loadState(this.currentState);
+  }
+
+  onDataGridChange() {
+    this.saveState();
   }
 
   selectionChanged(data: any) {
     this.selectedItemKeys = data.selectedRowKeys;
     this.pokeSprite = this.pokemon[this.selectedItemKeys[0].id - 1].sprite[0];
-    //  console.log(this.selectedItemKeys[0].id);
+    this.saveState();
   }
 
   click = (e: any) => {

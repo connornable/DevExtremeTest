@@ -5,7 +5,7 @@ import { AuthGuardService } from './shared/services';
 import { HomeComponent } from './pages/home/home.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { TasksComponent } from './pages/tasks/tasks.component';
-import { DxDataGridModule, DxFormModule, DxButtonModule, DxPopupModule, DxChartModule, DxTabsModule, DxDropDownBoxModule, DxTreeViewModule, DxSpeedDialActionModule } from 'devextreme-angular';
+import { DxDataGridModule, DxFormModule, DxButtonModule, DxPopupModule, DxChartModule, DxTabsModule, DxDropDownBoxModule, DxTreeViewModule, DxSpeedDialActionModule, DxListModule, DxDropDownButtonModule } from 'devextreme-angular';
 
 
 const routes: Routes = [
@@ -51,7 +51,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true }), DxDataGridModule, DxFormModule, DxButtonModule, DxPopupModule, DxChartModule, DxTabsModule, DxDropDownBoxModule, DxTreeViewModule, DxSpeedDialActionModule],
+  imports: [RouterModule.forRoot(routes, { useHash: true }), DxDataGridModule, DxFormModule, DxButtonModule, DxPopupModule, DxChartModule, DxTabsModule,
+  DxDropDownBoxModule, DxTreeViewModule, DxSpeedDialActionModule, DxListModule, DxDropDownButtonModule],
   providers: [AuthGuardService],
   exports: [RouterModule],
   declarations: [
