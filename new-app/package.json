@@ -12,6 +12,7 @@
   },
   "private": true,
   "dependencies": {
+    "@n-able/atoms": "^0.63.0",
     "@angular/animations": "~13.3.0",
     "@angular/cdk": "~13.3.0",
     "@angular/common": "~13.3.0",
@@ -35,6 +36,7 @@
     "@angular/cli": "~13.3.6",
     "@angular/compiler-cli": "~13.3.0",
     "@n-able/apex-tailwind": "*",
+    "@playwright/test": "^1.23.2",
     "@types/jasmine": "~3.10.0",
     "@types/node": "^12.11.1",
     "devextreme-cli": "latest",
