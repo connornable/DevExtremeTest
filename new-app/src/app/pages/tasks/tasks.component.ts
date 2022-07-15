@@ -10,6 +10,8 @@ import {
   DxDataGridModule,
 } from 'devextreme-angular';
 import { delay } from 'rxjs';
+import { exportDataGrid } from 'devextreme/pdf_exporter';
+import { jsPDF } from 'jspdf';
 
 @Component({
   templateUrl: 'tasks.component.html',
@@ -46,6 +48,7 @@ export class TasksComponent {
     'storage_slot_3',
   ];
   currentState: string = 'storage_slot_1';
+  initialState: string = "storage_slot_1";
 
   tabs: any[] = [
     {
@@ -66,6 +69,9 @@ export class TasksComponent {
     | DxDataGridComponent
     | undefined;
 
+
+  selectedRowIndex: number = -1;
+
   constructor(
     private httpClient: HttpClient,
     private PokemonService: PokemonService
@@ -85,20 +91,49 @@ export class TasksComponent {
     }
   }
 
+  onExporting(e: any) {
+     const doc = new jsPDF();
+    exportDataGrid({
+      jsPDFDocument: doc,
+      component: e.component,
+      indent: 5,
+    }).then(() => {
+      doc.save('Pokemon.pdf');
+    });
+  }
+
+ editRow() {
+    this.dataGrid?.instance.editRow(this.selectedRowIndex);
+    this.dataGrid?.instance.deselectAll();
+  }
+
+  deleteRow() {
+    this.dataGrid?.instance.deleteRow(this.selectedRowIndex);
+    this.dataGrid?.instance.deselectAll();
+  }
+
+  addRow() {
+    this.dataGrid?.instance.addRow();
+    this.dataGrid?.instance.deselectAll();
+  }
+
   saveState() {
+    console.log("saving state");
     const state = this.dataGrid?.instance.state();
     localStorage.setItem(this.currentState, JSON.stringify(state));
   }
   loadState(stateToLoad: string) {
+    console.log("loading state");
     const state = JSON.parse(localStorage.getItem(stateToLoad) || '{}');
     this.dataGrid?.instance.state(state);
+    
   }
 
   getRandomInt(max: number) {
     return Math.floor(Math.random() * max);
   }
 
-  onStateButtonClicked(e: any) {
+  onSaveSlotChanged(e: any) {
     this.currentState = e.itemData;
     this.loadState(this.currentState);
   }
@@ -110,6 +145,7 @@ export class TasksComponent {
   selectionChanged(data: any) {
     this.selectedItemKeys = data.selectedRowKeys;
     this.pokeSprite = this.pokemon[this.selectedItemKeys[0].id - 1].sprite[0];
+    this.selectedRowIndex = data.component.getRowIndexByKey(data.selectedRowKeys[0]);
     this.saveState();
   }
 
