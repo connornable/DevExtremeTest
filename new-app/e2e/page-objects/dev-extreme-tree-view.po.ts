@@ -2,7 +2,7 @@ import { Page } from "@playwright/test";
 
 import { Atom } from "@n-able/atoms";
 import { DevExtremeBase } from "./dev-extreme-base.po";
-import { TreeViewAtom } from "../src/atoms/tree-view-atoms";
+import { TreeViewAtom } from "../src/atoms/tree-view/tree-view-atoms";
 
 
 export class DevExtremeTreeView extends DevExtremeBase {

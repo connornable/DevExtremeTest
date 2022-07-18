@@ -46,7 +46,9 @@ export class TreeViewNodeAtom extends Atom {
     await PageActions.click(this.expander);
     await PageActions.waitForElementToBeStable(this.childNodeContainer);
   }
-
+  async expandedGrandchildNodeClick():Promise<void> {
+    await PageActions.click(this.childNodes)
+  }
     async isVisible(): Promise<boolean> {
     return PageActions.isVisible(this.element);
   }
@@ -55,5 +57,7 @@ export class TreeViewNodeAtom extends Atom {
     const nodeLocator = PageActions.getElementByIndex(this.childNodes, index);
     return new TreeViewNodeAtom(nodeLocator);
   }
+
+  
 
 }
