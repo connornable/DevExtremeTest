@@ -9,10 +9,9 @@
     "test": "ng test",
     "build-themes": "devextreme build",
     "postinstall": "npm run build-themes && npm run e2e:install",
-    "e2e": "start-server-and-test start:e2e http://localhost:4200 e2e:run",
+    "e2e": "start-server-and-test start http://localhost:4200 e2e:run",
     "e2e:install": "playwright install chromium --with-deps",
-    "e2e:run": "playwright test --config e2e/playwright.config.ts",
-    "start:e2e": "ng serve --configuration=e2e"
+    "e2e:run": "playwright test --config e2e/playwright.config.ts"
   },
   "private": true,
   "dependencies": {
