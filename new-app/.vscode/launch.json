@@ -23,9 +23,10 @@
       "program": "${workspaceRoot}/node_modules/@playwright/test/cli.js",
       "args": [
         "test",
-        "--config=e2e/playwright.config.ts",
-        "--headed",
-       // "tab-heading-group-atom.spec.ts",
+        "--config=e2e/playwright.config.ts", // Using the E2E configuration file
+        "--headed" // Runs the tests headed instead of headless (allows you to manually inspect the browser while paused at a breakpoint)
+        // "--project=e2e", // Runs the `e2e` project (required in an Angular Application). Can also be used if you use projects to define different suites per browser
+        // "settings.spec.ts", // Runs one single test file
       ],
       "console": "integratedTerminal"
     }

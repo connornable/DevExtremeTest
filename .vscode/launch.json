@@ -10,6 +10,24 @@
             "name": "Launch Chrome against localhost",
             "url": "http://localhost:4200",
             "webRoot": "${workspaceFolder}"
+        },
+        {
+          "type": "node",
+          "request": "launch",
+          "name": "Run E2E Tests",
+          // TODO: This is non-standard changed because of new-app folder
+          // "program": "${workspaceRoot}/node_modules/@playwright/test/cli.js",
+          "program": "${workspaceRoot}/new-app/node_modules/@playwright/test/cli.js",
+          "args": [
+            "test",
+            // TODO: This is non-standard changed because of new-app folder
+            "--config=new-app/e2e/playwright.config.ts", // Using the E2E configuration file
+            // "--config=e2e/playwright.config.ts", // Using the E2E configuration file
+            "--headed" // Runs the tests headed instead of headless (allows you to manually inspect the browser while paused at a breakpoint)
+            // "--project=e2e", // Runs the `e2e` project (required in an Angular Application). Can also be used if you use projects to define different suites per browser
+            // "settings.spec.ts", // Runs one single test file
+          ],
+          "console": "integratedTerminal"
         }
     ]
 }
