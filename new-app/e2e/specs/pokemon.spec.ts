@@ -13,14 +13,21 @@ test.describe("Task List>", () => {
   });
 
   test("click on Example", async () =>{
-await pokemon.clickExamples()
-  })
+await pokemon.clickExamples();
+  });
 
-// test("GET TITLE",async () => {
-//    expect(await pokemon.getTitle()).toBe("Pokemon");
-// })
-// test("Get Count of images",async () => {
-//    expect(await pokemon.getItemCount(this.listItems()));
-// })
-
+test("click on the task bar ",async () => {
+  await pokemon.clickTasks();
+});
+test ("Click on the Id cell",async () =>{
+  await pokemon.clickId();
+})
+test ("Click on the Id filter",async () =>{
+  await pokemon.clickIdFilter();
+})
+test.only("Get the total rows count ",async () =>{
+   await pokemon.clickTasks();
+   await page.waitForTimeout(5000);
+  expect(await pokemon.pokemonRowCount()).toBe(1);
+})
 });
