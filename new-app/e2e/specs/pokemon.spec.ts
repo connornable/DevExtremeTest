@@ -4,6 +4,7 @@ import { Pokemon } from "../page-objects/pokemon.po";
 test.describe("Task List>", () => {
  let page: Page;
   let pokemon : Pokemon;
+
  
   test.beforeAll(async ({ browser }) => {
     page = await (await browser.newContext()).newPage();
@@ -11,23 +12,31 @@ test.describe("Task List>", () => {
     pokemon = new Pokemon(page);
 
   });
-
-  test("click on Example", async () =>{
-await pokemon.clickExamples();
+   test.beforeEach(async () => {
+    await pokemon.clickTasks();
   });
-
-test("click on the task bar ",async () => {
-  await pokemon.clickTasks();
-});
 test ("Click on the Id cell",async () =>{
-  await pokemon.clickId();
+ await pokemon.clickId();
 })
 test ("Click on the Id filter",async () =>{
+ 
   await pokemon.clickIdFilter();
 })
-test.only("Get the total rows count ",async () =>{
-   await pokemon.clickTasks();
-   await page.waitForTimeout(5000);
-  expect(await pokemon.pokemonRowCount()).toBe(1);
+test("click the checkbox",async () =>{
+  await pokemon.selectCheckbox();
 })
-});
+test("Get the pokemon header row text" , async () =>{
+const expectedText = "Sprite,Id,Name,Height,Type,";
+expect(await pokemon.getHeaderRowText()).toBe(expectedText)
+})
+test("Get the total rows count ",async () =>{
+  expect(await pokemon.pokemonRowCount()).toBe(12);
+})
+test("Click on the pagenumbers link ", async () =>{
+await pokemon.pageNumberLinkClick(3);
+})
+test("Click on the count page number links",async () =>{
+await pokemon.pokemsItemsPerPage(10);
+})
+ });
+
