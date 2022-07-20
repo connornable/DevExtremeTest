@@ -1,6 +1,7 @@
 <h2 class="content-block">Pokemon</h2>
 
-<dx-data-grid style ="max-height: 800px"
+<dx-data-grid
+  style="max-height: 800px"
   class="dx-card wide-card"
   [dataSource]="pokemon"
   [showBorders]="false"
@@ -12,11 +13,9 @@
   [allowColumnReordering]="true"
   (onContentReady)="onDataGridChange()"
   (onExporting)="onExporting($event)"
-
 >
   <dxo-filter-row [visible]="true"></dxo-filter-row>
   <dxo-header-filter [visible]="true" alignment="left"></dxo-header-filter>
- 
 
   <dxo-export
     [enabled]="true"
@@ -31,11 +30,11 @@
     storageKey="currentState"
   ></dxo-state-storing>
 
-  <dxo-scrolling mode="standard" showScrollbar="always"></dxo-scrolling>  
+  <dxo-scrolling mode="standard" showScrollbar="always"></dxo-scrolling>
   <dxo-paging [pageSize]="10"> </dxo-paging>
   <dxo-pager
     [visible]="true"
-    [allowedPageSizes]="[5,10,20,'all']"
+    [allowedPageSizes]="[5, 10, 20, 'all']"
     [displayMode]="'full'"
     [showPageSizeSelector]="true"
     [showInfo]="true"
@@ -71,30 +70,30 @@
   <div *dxTemplate="let data of 'cellTemplate'">
     <img [src]="data.value" />
   </div>
-
 </dx-data-grid>
 
+
 <dx-speed-dial-action
-icon="add"
-label="Add row"
-[index]="1"
-(onClick)="addRow()"
+  icon="add"
+  label="Add row"
+  [index]="1"
+  (onClick)="addRow()"
 >
 </dx-speed-dial-action>
 <dx-speed-dial-action
-icon="trash"
-label="Delete row"
-[index]="2"
-[visible]="selectedRowIndex !== -1"
-(onClick)="deleteRow()"
+  icon="trash"
+  label="Delete row"
+  [index]="2"
+  [visible]="selectedRowIndex !== -1"
+  (onClick)="deleteRow()"
 >
 </dx-speed-dial-action>
 <dx-speed-dial-action
-icon="edit"
-label="Edit row"
-[index]="3"
-[visible]="selectedRowIndex !== -1"
-(onClick)="editRow()"
+  icon="edit"
+  label="Edit row"
+  [index]="3"
+  [visible]="selectedRowIndex !== -1"
+  (onClick)="editRow()"
 >
 </dx-speed-dial-action>
 
@@ -107,14 +106,7 @@ label="Edit row"
 >
 </dx-button>
 
-<dx-button
-  stylingMode="contained"
-  text="Update Table"
-  type="default"
-  [width]="120"
-  (onClick)="updateTable()"
->
-</dx-button>
+
 
 <dx-button
   stylingMode="contained"
@@ -241,3 +233,141 @@ label="Edit row"
   </dxo-common-series-settings>
   <dxo-series-template nameField="{{ chartKey }}"></dxo-series-template>
 </dx-chart>
+
+
+<br />
+<br />
+<br />
+<br />
+
+<dx-button
+  stylingMode="contained"
+  text="Update Table"
+  type="default"
+  [width]="120"
+  (onClick)="populateDeviceTable()"
+>
+</dx-button>
+
+<div class="widget-container" >
+  <dx-tab-panel style="float: left" width="20%">
+    <dxi-item title="Clients">
+      <div *dxTemplate>
+  <dx-list
+    #list
+    [dataSource]="clients"
+    displayExpr="name"
+    [height]="400"
+    [selectionMode]="'page'"
+    [selectAllMode]="'all'"
+    [showSelectionControls]="true"
+    [selectedItemKeys]="[]"
+    (onSelectionChanged)="deviceListClientSelectionChanged($event)"
+    
+    
+  > 
+  </dx-list>
+</div>
+</dxi-item>
+
+
+<dxi-item title="Filters">
+  <div *dxTemplate>
+    <dx-list
+    [dataSource]="deviceTableFilters"
+    [grouped]="true"
+    [collapsibleGroups]="true"
+    [selectionMode]="'page'"
+    [selectAllMode]="'all'"
+    [showSelectionControls]="true"
+    [selectedItemKeys]="[]"
+    (onSelectionChanged)="deviceListFilterSelectionChanged($event)"
+    
+  >
+  </dx-list>
+  </div>
+</dxi-item>
+
+</dx-tab-panel>
+
+
+
+  <dx-data-grid
+  #deviceGrid
+    style="max-height: 800px"
+    class="dx-card wide-card"
+    [dataSource]="devices"
+    [showBorders]="false"
+    [columnAutoWidth]="false"
+    [columnHidingEnabled]="true"
+    [showBorders]="true"
+    [columnWidth]="150"
+    [allowColumnReordering]="true"
+    (onContentReady)="onDataGridChange()"
+    (onExporting)="onExporting($event)"
+    (onSelectionChanged)="deviceGridSelectionChanged($event)"
+  >
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-header-filter [visible]="true" alignment="left"></dxo-header-filter>
+
+    <dxo-scrolling mode="standard" showScrollbar="always"></dxo-scrolling>
+    <dxo-paging [pageSize]="10"> </dxo-paging>
+    <dxo-pager
+      [visible]="true"
+      [allowedPageSizes]="[5, 10, 20, 'all']"
+      [displayMode]="'full'"
+      [showPageSizeSelector]="true"
+      [showInfo]="true"
+      [showNavigationButtons]="true"
+    >
+    </dxo-pager>
+
+    <dxo-selection mode="single"></dxo-selection>
+
+    <dxi-column dataField="id"></dxi-column>
+
+    <dxi-column dataField="name"></dxi-column>
+
+    <dxi-column dataField="type"> </dxi-column>
+
+    <dxi-column dataField="site.client.name"
+    caption="Client"></dxi-column>
+
+    <dxi-column dataField="site.name"
+    caption="Site"></dxi-column>
+
+    <dxi-column 
+    caption="Os"></dxi-column>
+  </dx-data-grid>
+
+  <dx-popup
+  [width]="300"
+  [height]="280"
+  [showTitle]="true"
+  title="Device"
+  [dragEnabled]="false"
+  [hideOnOutsideClick]="true"
+  [showCloseButton]="true"
+  container=".dx-viewport"
+  [(visible)]="devicePopupVisible"
+
+>
+<div *dxTemplate="let data of 'content'">
+  <p>
+    ID:
+    <span
+      ></span
+    >
+  </p>
+  <p>
+    Name:
+    <span></span>
+  </p>
+  <p>
+    Client:
+    <span></span>
+  </p>
+</div>
+</dx-popup>
+
+</div>
