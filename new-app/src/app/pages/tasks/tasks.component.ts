@@ -47,8 +47,8 @@ export class TasksComponent {
     'storage_slot_2',
     'storage_slot_3',
   ];
-  currentState: string = 'storage_slot_1';
-  initialState: string = 'storage_slot_1';
+  currentState: string = 'storage_slot_0';
+  initialState: string = 'storage_slot_0';
 
   tabs: any[] = [
     {
@@ -141,9 +141,10 @@ export class TasksComponent {
   }
 
   saveState() {
-    console.log('saving state');
+    console.log('saving state' + this.currentState);
     const state = this.dataGrid?.instance.state();
     localStorage.setItem(this.currentState, JSON.stringify(state));
+   
   }
   loadState(stateToLoad: string) {
     console.log('loading state');
