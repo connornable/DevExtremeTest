@@ -2,6 +2,7 @@
 
 <dx-data-grid
   style="max-height: 800px"
+  id="pokemontable"
   class="dx-card wide-card"
   [dataSource]="pokemon"
   [showBorders]="false"
@@ -58,9 +59,9 @@
   >
   </dxi-column>
 
-  <dxi-column dataField="id" [hidingPriority]="2"> </dxi-column>
+  <dxi-column  dataField="id"  [hidingPriority]="2"> </dxi-column>
 
-  <dxi-column alignment="right" dataField="name" [hidingPriority]="2">
+  <dxi-column alignment="right" dataField="name"  [hidingPriority]="2">
   </dxi-column>
 
   <dxi-column dataField="height" [hidingPriority]="2"> </dxi-column>
