@@ -310,6 +310,12 @@
     <dxo-filter-row [visible]="true"></dxo-filter-row>
     <dxo-header-filter [visible]="true" alignment="left"></dxo-header-filter>
 
+    <dxo-column-chooser
+     [enabled]="true"
+     [allowSearch]="true"
+     [mode]="'select'"
+     ></dxo-column-chooser>
+
     <dxo-scrolling mode="standard" showScrollbar="always"></dxo-scrolling>
     <dxo-paging [pageSize]="10"> </dxo-paging>
     <dxo-pager

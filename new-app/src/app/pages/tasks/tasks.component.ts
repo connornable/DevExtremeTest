@@ -107,6 +107,7 @@ export class TasksComponent {
     this.deviceTableFilters = this.filterService.getFilters();
     this.currentState = localStorage.getItem("lastState") || this.initialState;
     this.loadState(this.currentState);
+    this.dataGrid?.instance.refresh();
     this.chartSource = this.typeList;
     for (let val of this.typeList) {
       this.typeSet.add(val.type);
@@ -258,6 +259,7 @@ export class TasksComponent {
     ) {
       this.deviceGrid?.instance.clearFilter();
     }
+    this.deviceGrid?.instance.refresh();
 
   
   }
@@ -271,6 +273,7 @@ export class TasksComponent {
       'filterValues',
       this.filters
     );
+    this.dataGrid?.instance.refresh();
   }
 
   treeView_itemSelectionChanged(e: any) {
