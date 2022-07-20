@@ -126,7 +126,6 @@ export class PokemonService {
       };
 
       this.httpClient.get(this.url + i).subscribe((data: any) => {
-        console.log(data);
         pokemon.sprite[0] = data.sprites.front_default;
         pokemon.sprite[1] = data.sprites.back_default;
         pokemon.sprite[2] = data.sprites.front_shiny;

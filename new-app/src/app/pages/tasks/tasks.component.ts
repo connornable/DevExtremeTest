@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import 'devextreme/data/odata/store';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { PokemonService } from './pokemon.service';
 import { IPokemon } from '../pokemon/Pokemon';
 import { DxButtonModule } from 'devextreme-angular/ui/button';
@@ -8,24 +8,26 @@ import {
   DxChartComponent,
   DxDataGridComponent,
   DxDataGridModule,
+  DxListComponent,
 } from 'devextreme-angular';
 import { delay } from 'rxjs';
+import { exportDataGrid } from 'devextreme/pdf_exporter';
+import { jsPDF } from 'jspdf';
+import { DevicesService } from './devices.service';
+import DataSource from 'devextreme/data/data_source';
+import ArrayStore from 'devextreme/data/array_store';
+import { ClientsService } from './clients.service';
+import { Filter, FilterService } from './filter.service';
 
 @Component({
   templateUrl: 'tasks.component.html',
 })
 export class TasksComponent {
-  // @ViewChild(DxChartComponent)
-  // chart!: DxChartComponent;
-  // ds: any = {};
-  // getDataSource() {
-  //     this.ds = this.chart.instance.getDataSource();
-  // }
-
   dataSource: any;
   pokemon: IPokemon[] = [];
   selectedItemKeys: any = [];
   popupVisible: boolean = false;
+  devicePopupVisible: boolean = false;
   pokeSprite: string = '';
   cahngeSelectionOptions: any;
   canAnimate: boolean = false;
@@ -40,6 +42,13 @@ export class TasksComponent {
   statsComparison: any[] = [];
   firstPokemonComparisonSlot: string = '';
   secondPokemonComparisonSlot: string = '';
+  stateConfig: string[] = [
+    'storage_slot_1',
+    'storage_slot_2',
+    'storage_slot_3',
+  ];
+  currentState: string = 'storage_slot_0';
+  initialState: string = 'storage_slot_0';
 
   tabs: any[] = [
     {
@@ -52,18 +61,42 @@ export class TasksComponent {
     },
   ];
 
+  devices: any[] = [];
+  clients: DataSource;
+  deviceTableFilters: Filter[] = [];
+  activeTableDevicesFilter: string[] = [];
+  activeTableOsFilter: any[] = [];
+
+  selectedDevice: any = null;
+
   @ViewChild(DxDataGridComponent, { static: false }) dataGrid:
     | DxDataGridComponent
     | undefined;
 
-  @ViewChild(DxChartComponent, { static: false }) chart:
+  @ViewChild('deviceGrid', { static: false }) deviceGrid:
     | DxDataGridComponent
     | undefined;
 
+  @ViewChild(DxListComponent, { static: false }) list:
+    | DxListComponent
+    | undefined;
+
+  selectedRowIndex: number = -1;
+
   constructor(
     private httpClient: HttpClient,
-    private PokemonService: PokemonService
-  ) {}
+    private PokemonService: PokemonService,
+    private deviceService: DevicesService,
+    private clientsService: ClientsService,
+    private filterService: FilterService
+  ) {
+    this.clients = new DataSource({
+      store: new ArrayStore({
+        key: 'id',
+        data: this.clientsService.getClients(),
+      }),
+    });
+  }
 
   async ngOnInit() {
     await new Promise((f) => setTimeout(f, 1000));
@@ -71,22 +104,85 @@ export class TasksComponent {
     this.typeList = this.PokemonService.getTypeCount();
     this.heightList = this.PokemonService.getHeightCount();
     this.statsComparison = this.PokemonService.getStatsList();
-    console.log(this.heightList);
-    console.log(this.typeList);
+    this.deviceTableFilters = this.filterService.getFilters();
+    this.currentState = localStorage.getItem("lastState") || this.initialState;
+    this.loadState(this.currentState);
+    this.dataGrid?.instance.refresh();
     this.chartSource = this.typeList;
     for (let val of this.typeList) {
       this.typeSet.add(val.type);
     }
   }
 
+  onExporting(e: any) {
+    const doc = new jsPDF();
+    exportDataGrid({
+      jsPDFDocument: doc,
+      component: e.component,
+      indent: 5,
+    }).then(() => {
+      doc.save('Pokemon.pdf');
+    });
+  }
+
+  editRow() {
+    this.dataGrid?.instance.editRow(this.selectedRowIndex);
+    this.dataGrid?.instance.deselectAll();
+  }
+
+  deleteRow() {
+    this.dataGrid?.instance.deleteRow(this.selectedRowIndex);
+    this.dataGrid?.instance.deselectAll();
+  }
+
+  addRow() {
+    this.dataGrid?.instance.addRow();
+    this.dataGrid?.instance.deselectAll();
+  }
+
+  saveState() {
+    console.log('saving state' + this.currentState);
+    const state = this.dataGrid?.instance.state();
+    localStorage.setItem(this.currentState, JSON.stringify(state));
+   
+  }
+  loadState(stateToLoad: string) {
+    console.log('loading state');
+    const state = JSON.parse(localStorage.getItem(stateToLoad) || '{}');
+    this.dataGrid?.instance.state(state);
+  }
+
   getRandomInt(max: number) {
     return Math.floor(Math.random() * max);
+  }
+
+  onSaveSlotChanged(e: any) {
+    this.currentState = e.itemData;
+    localStorage.setItem("lastState", this.currentState)
+    this.loadState(this.currentState);
+  }
+
+  onDataGridChange() {
+    this.saveState();
   }
 
   selectionChanged(data: any) {
     this.selectedItemKeys = data.selectedRowKeys;
     this.pokeSprite = this.pokemon[this.selectedItemKeys[0].id - 1].sprite[0];
-    //  console.log(this.selectedItemKeys[0].id);
+    this.selectedRowIndex = data.component.getRowIndexByKey(
+      data.selectedRowKeys[0]
+    );
+    this.saveState();
+  }
+
+  deviceGridSelectionChanged(e: any) {
+
+
+
+    
+//this.selectedDevice = this.devices[e.selectedItemKeys[0]];
+    console.log(e.selectedItemKeys);
+    this.devicePopupVisible = true;
   }
 
   click = (e: any) => {
@@ -105,6 +201,68 @@ export class TasksComponent {
   clearFilter() {
     this.dataGrid?.instance.clearFilter();
     this.filters = [];
+  }
+
+  //FIX!!!
+
+  deviceListClientSelectionChanged(e: any) {
+    // let filter: any[] = [];
+
+    // e.addedItems.forEach((element: { name: any }) => {
+    //   filter.push(element.name);
+    // });
+    // console.log(filter + ' client filter');
+    // this.deviceGrid?.instance.columnOption('Client', 'filterValues', filter);
+
+    // this.deviceGrid?.instance.refresh();
+  }
+
+  deviceListFilterSelectionChanged(e: any) {
+    // console.log(e.selectedItems);
+    // console.log(JSON.stringify(e.addedItems) + ' added items');
+    e.addedItems.forEach((element: any) => {
+      if (element.key === 'Devices') {
+        this.activeTableDevicesFilter.push(element.text);
+        console.log(this.activeTableDevicesFilter);
+      } else if (element.key === 'os') {
+        this.activeTableOsFilter.push(element.text);
+      }
+    });
+
+    e.removedItems.forEach((element: any) => {
+      if (this.activeTableDevicesFilter.includes(element.text)) {
+        this.activeTableDevicesFilter.splice(
+          this.activeTableDevicesFilter.indexOf(element),
+          1
+        );
+      } else if (this.activeTableOsFilter.includes(element.text)) {
+        this.activeTableOsFilter.splice(
+          this.activeTableOsFilter.indexOf(element),
+          1
+        );
+      }
+    });
+
+    this.deviceGrid?.instance.columnOption(
+      'Type',
+      'filterValues',
+      this.activeTableDevicesFilter
+    );
+
+    this.deviceGrid?.instance.columnOption(
+      'Os',
+      'filterValues',
+      this.activeTableOsFilter
+    );
+    if (
+      this.activeTableDevicesFilter.length === 0 &&
+      this.activeTableOsFilter.length === 0
+    ) {
+      this.deviceGrid?.instance.clearFilter();
+    }
+    this.deviceGrid?.instance.refresh();
+
+  
   }
 
   onPointClick(e: any) {
@@ -136,59 +294,14 @@ export class TasksComponent {
     }
   }
 
-  async updateTable() {
-    // await new Promise((f) => setTimeout(f, 1100));
-    // console.log('updated');
-
-    // let filter = this.dataGrid?.instance.getCombinedFilter();
-    // this.filterList = [];
-
-    // console.log(this.typeList);
-    // //   console.log(this.testList);
-    // // console.log(filter);
-    // // console.log(filter.filterValue);
-    // // console.log(filter[0][2]);
-    // // console.log(filter[1]);
-    // // console.log(filter[2]);
-    // // }
-    // console.log(this.filterList);
-    // if (filter) {
-    //   if (
-    //     !this.filterList.includes(filter.filterValue) &&
-    //     this.typeSet.has(filter.filterValue)
-    //   ) {
-    //     this.filterList.push(filter.filterValue);
-    //     console.log(this.filterList);
-    //   }
-    //   filter.forEach((element: { filterValue: any }) => {
-    //     if (
-    //       !this.filterList.includes(element.filterValue) &&
-    //       this.typeSet.has(element.filterValue)
-    //     ) {
-    //       this.filterList.push(element.filterValue);
-    //       console.log(this.filterList);
-    //     }
-    //   });
-    //   console.log(this.filterList);
-    //   this.filterList.forEach((element) => {
-    //     console.log(element);
-    //     if (this.typeList.some((e) => e.type === element)) {
-    //       console.log('matched');
-    //       const index = this.typeList.findIndex(
-    //         (item) => item.type === element
-    //       );
-    //       console.log(index);
-    //       console.log(this.typeList[index]);
-    //       this.testList.push(this.typeList[index]);
-    //     }
-
-    //     console.log('test list ' + this.testList);
-    //   });
-
-    // }
-
-    //  console.log(this.statsComparison)
-    this.chart?.instance.refresh();
+  async populateDeviceTable() {
+    this.devices = this.deviceService.getDevices();
+    this.clients = new DataSource({
+      store: new ArrayStore({
+        key: 'id',
+        data: this.clientsService.getClients(),
+      }),
+    });
   }
 
   async animate() {
@@ -239,9 +352,5 @@ export class TasksComponent {
 
     this.statsComparison[5].firstPokemonComparisonSlot = pokemon1.speed;
     this.statsComparison[5].secondPokemonComparisonSlot = pokemon2.speed;
-
-    this.chart?.instance.refresh();
-
-    console.log(this.statsComparison);
   }
 }
